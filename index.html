@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APS&C Faisal - Online MCQs Examination</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        aps: {
+                            green: '#047857',
+                            darkgreen: '#064e3b',
+                            red: '#dc2626',
+                            lightbg: '#f8fafc'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 font-sans flex flex-col justify-between selection:bg-emerald-200">
+
+    <!-- Header Section -->
+    <header class="bg-aps-darkgreen border-b-4 border-aps-red text-white py-4 px-4 sm:px-8 shadow-lg">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-3">
+            <div>
+                <h1 class="text-lg sm:text-xl md:text-2xl font-bold tracking-wide">ARMY PUBLIC SCHOOL & COLLEGE</h1>
+                <p class="text-xs sm:text-sm text-emerald-200 font-medium">FAISAL, KARACHI — Senior Section</p>
+                <p class="text-[11px] text-slate-300 mt-0.5">Subject: Computer Science (SSC-I) | Subject Teacher: Waqas Ahmed Khan</p>
+            </div>
+            <button type="button" onclick="openAdminModal()" class="bg-emerald-800 hover:bg-emerald-700 text-emerald-100 text-xs px-3.5 py-2 rounded-lg font-semibold transition border border-emerald-600 shadow-sm shrink-0 cursor-pointer">
+                🔒 Admin Panel
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex items-center justify-center p-3 sm:p-6">
+        <div class="max-w-2xl w-full bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+            
+            <!-- 1. STUDENT REGISTRATION FORM SCREEN -->
+            <div id="registrationScreen" class="p-6 sm:p-8">
+                <div class="text-center mb-6">
+                    <span class="inline-block px-3 py-1 bg-emerald-100 text-aps-darkgreen text-xs font-bold rounded-full mb-2">SSC-I Online Examination Portal</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Student Details Form</h2>
+                    <p class="text-slate-500 text-xs sm:text-sm mt-1">Test shuru karne se pehle apni maloomat darj karein.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Student Full Name *</label>
+                        <input type="text" id="stuName" placeholder="e.g. Muhammad Ali" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Roll Number *</label>
+                            <input type="text" id="stuRoll" placeholder="e.g. 1024" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Class *</label>
+                            <input type="text" id="stuClass" value="Class IX (SSC-I)" readonly class="w-full bg-slate-200 border border-slate-300 rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Section *</label>
+                            <select id="stuSection" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition">
+                                <option value="">Select Section</option>
+                                <option value="A">Section A</option>
+                                <option value="B">Section B</option>
+                                <option value="C">Section C</option>
+                                <option value="D">Section D</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="button" onclick="startTest()" class="w-full bg-aps-green hover:bg-emerald-800 text-white font-bold py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition duration-200 text-sm sm:text-base flex items-center justify-center space-x-2 cursor-pointer">
+                            <span>Start Test Now</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. LOCKED SCREEN (IF ALREADY ATTEMPTED) -->
+            <div id="lockedScreen" class="hidden p-6 sm:p-8 text-center">
+                <div class="w-16 h-16 bg-red-100 text-aps-red rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold border border-red-200">🔒</div>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-1">Test Already Attempted</h2>
+                <p class="text-slate-500 text-xs sm:text-sm mb-6">Aap pehle hi yeh test de chuke hain. Dobara test dene ke liye Admin se approve karwayein.</p>
+                <div id="previousResultSummary" class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left text-sm mb-6"></div>
+            </div>
+
+            <!-- 3. QUIZ SCREEN -->
+            <div id="quizScreen" class="hidden p-5 sm:p-8">
+                <!-- Info Bar -->
+                <div class="flex justify-between items-center mb-6 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs sm:text-sm">
+                    <span id="questionCounter" class="font-bold text-aps-darkgreen">Question 1 of 60</span>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-slate-500">Timer:</span>
+                        <span id="timerDisplay" class="font-mono font-bold text-aps-red bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg">60s</span>
+                    </div>
+                </div>
+
+                <!-- Question Title -->
+                <div class="mb-6">
+                    <h2 id="questionText" class="text-base sm:text-lg font-bold text-slate-800 leading-relaxed"></h2>
+                </div>
+
+                <!-- Options List -->
+                <div id="optionsContainer" class="space-y-3 mb-4">
+                    <!-- Options injected via JavaScript -->
+                </div>
+            </div>
+
+            <!-- 4. ATTRACTIVE SMART RESULT CARD -->
+            <div id="resultScreen" class="hidden p-4 sm:p-6 bg-slate-50">
+                <div id="resultCard" class="bg-white rounded-2xl border-2 border-aps-darkgreen shadow-md overflow-hidden p-5 sm:p-6 text-center">
+                    
+                    <!-- Result Card Header -->
+                    <div class="border-b-2 border-slate-100 pb-4 mb-4">
+                        <div class="flex justify-center mb-1">
+                            <span class="px-3 py-1 bg-emerald-100 text-aps-darkgreen text-[11px] font-extrabold tracking-wider uppercase rounded-full">OFFICIAL EXAMINATION RESULT</span>
+                        </div>
+                        <h2 class="text-lg sm:text-xl font-black text-aps-darkgreen">ARMY PUBLIC SCHOOL & COLLEGE</h2>
+                        <p class="text-xs font-bold text-slate-600">FAISAL, KARACHI (Senior Section)</p>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Subject: Computer Science (SSC-I) | Teacher: Waqas Ahmed Khan</p>
+                    </div>
+
+                    <!-- Student Info Grid -->
+                    <div class="bg-slate-50 rounded-xl p-3 mb-5 border border-slate-200 text-xs text-left grid grid-cols-2 gap-2">
+                        <div><span class="text-slate-500">Student Name:</span> <strong id="resStuName" class="text-slate-900 block sm:inline"></strong></div>
+                        <div><span class="text-slate-500">Roll Number:</span> <strong id="resStuRoll" class="text-slate-900 block sm:inline"></strong></div>
+                        <div><span class="text-slate-500">Class:</span> <strong id="resStuClass" class="text-slate-900 block sm:inline"></strong></div>
+                        <div><span class="text-slate-500">Section:</span> <strong id="resStuSection" class="text-slate-900 block sm:inline"></strong></div>
+                    </div>
+
+                    <!-- Marks & Percentage Stats -->
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl">
+                            <p class="text-[11px] font-bold text-emerald-800 uppercase">Total Marks</p>
+                            <p id="resMarks" class="text-xl sm:text-2xl font-black text-aps-darkgreen mt-0.5">0 / 30</p>
+                        </div>
+                        <div class="bg-red-50 border border-red-200 p-3 rounded-xl">
+                            <p class="text-[11px] font-bold text-aps-red uppercase">Percentage</p>
+                            <p id="resPercentage" class="text-xl sm:text-2xl font-black text-aps-red mt-0.5">0%</p>
+                        </div>
+                    </div>
+
+                    <!-- Remarks Box -->
+                    <div class="bg-slate-900 text-white p-3 rounded-xl mb-4 text-center">
+                        <p class="text-[10px] text-slate-400 font-semibold uppercase">Performance Remarks</p>
+                        <p id="resRemarks" class="text-xs sm:text-sm font-bold text-emerald-300 mt-0.5">-</p>
+                    </div>
+
+                    <!-- Footer Credit inside card -->
+                    <div class="text-[10px] text-slate-400 border-t border-slate-100 pt-2 flex justify-between items-center">
+                        <span>Developed by: Waqas Ahmed Khan</span>
+                        <span class="font-semibold text-emerald-700">APS&C Faisal</span>
+                    </div>
+                </div>
+
+                <p class="text-center text-xs text-slate-500 mt-3 font-medium">📷 Is Result Card ka Screenshot lekar apne Subject Teacher ko WhatsApp karein.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-3 flex items-center space-x-2">
+                <span>🔐</span> <span>Admin Authorization Panel</span>
+            </h3>
+            
+            <div id="adminLoginView">
+                <p class="text-xs text-slate-500 mb-4">Attempt lock reset karne ya retest approve karne ke liye password enter karein.</p>
+                <input type="password" id="adminPasswordInput" placeholder="Enter Admin Password" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-4 py-2.5 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-emerald-600">
+                <div class="flex space-x-2">
+                    <button type="button" onclick="verifyAdmin()" class="flex-1 bg-aps-green hover:bg-emerald-800 text-white font-bold py-2 rounded-lg text-xs sm:text-sm transition cursor-pointer">Login</button>
+                    <button type="button" onclick="closeAdminModal()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-lg text-xs sm:text-sm transition cursor-pointer">Cancel</button>
+                </div>
+            </div>
+
+            <div id="adminDashboardView" class="hidden text-center">
+                <div class="p-3 bg-emerald-50 text-emerald-800 rounded-xl text-xs font-semibold mb-4 border border-emerald-200">✓ Access Granted</div>
+                <button type="button" onclick="adminResetTest()" class="w-full bg-aps-red hover:bg-red-700 text-white font-bold py-2.5 rounded-lg text-xs sm:text-sm shadow transition mb-3 cursor-pointer">
+                    Reset Student Attempt & Approve Retest
+                </button>
+                <button type="button" onclick="closeAdminModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-2 rounded-lg text-xs transition cursor-pointer">Close Panel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Footer -->
+    <footer class="text-center py-3 text-[11px] text-slate-500 border-t border-slate-200 bg-white">
+        Army Public School & College - Faisal, Karachi | Developed by: Waqas Ahmed Khan
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        // 60 Domain A MCQs Database
+        const quizData = [
+            { q: "Which of the following is an example of a computer system?", options: ["A laptop used to process information", "A wooden chair", "A paper notebook only", "A pencil sharpener"], ans: 0 },
+            { q: "Which component is known as the brain of the computer?", options: ["Monitor", "CPU", "Keyboard", "Printer"], ans: 1 },
+            { q: "Which part of the CPU performs arithmetic and logical operations?", options: ["ALU", "Control Unit", "RAM", "Hard Disk"], ans: 0 },
+            { q: "What is the main function of the Control Unit (CU)?", options: ["To print documents", "To coordinate and control computer operations", "To store files permanently", "To display pictures"], ans: 1 },
+            { q: "Which memory loses its data when the power is switched off?", options: ["ROM", "Hard Disk", "RAM", "DVD"], ans: 2 },
+            { q: "Which of the following is an input device?", options: ["Monitor", "Speaker", "Keyboard", "Printer"], ans: 2 },
+            { q: "Which device displays information on a screen?", options: ["Mouse", "Monitor", "Scanner", "Microphone"], ans: 1 },
+            { q: "Which of the following is an output device?", options: ["Microphone", "Keyboard", "Scanner", "Printer"], ans: 3 },
+            { q: "Which device is used to store data permanently?", options: ["RAM", "Cache", "SSD", "Register"], ans: 2 },
+            { q: "Which of the following is system software?", options: ["Operating System", "Presentation File", "Photograph", "Spreadsheet Data"], ans: 0 },
+            { q: "What is hardware?", options: ["Programs and instructions", "Physical parts of a computer", "Data stored online only", "Rules for using the internet"], ans: 1 },
+            { q: "What is software?", options: ["Physical wires", "Computer programs and instructions", "A computer screen", "A network cable"], ans: 1 },
+            { q: "Which of the following is a natural system?", options: ["School Management System", "Solar System", "Traffic Light System", "Computer Network"], ans: 1 },
+            { q: "Which of the following is an artificial system?", options: ["Human Body", "Forest Ecosystem", "School Management System", "Solar System"], ans: 2 },
+            { q: "A computer system takes input, processes it and produces:", options: ["Output", "Electricity", "Hardware", "A Network"], ans: 0 },
+            { q: "What is the purpose of secondary storage?", options: ["To perform calculations", "To keep data for later use", "To control all instructions", "To display output"], ans: 1 },
+            { q: "Which device converts a paper document into a digital image?", options: ["Printer", "Scanner", "Speaker", "Plotter"], ans: 1 },
+            { q: "Which unit is commonly used to measure processor speed?", options: ["Gigahertz (GHz)", "Litres", "Centimetres", "Kilograms"], ans: 0 },
+            { q: "Which component temporarily holds data and instructions currently in use?", options: ["RAM", "DVD", "Printer", "Router"], ans: 0 },
+            { q: "What is the main function of a motherboard?", options: ["To connect major computer components", "To print documents", "To scan photographs", "To provide internet by itself"], ans: 0 },
+            { q: "Which device allows a computer to connect to a network?", options: ["Network Interface Card (NIC)", "Projector", "Plotter", "Joystick"], ans: 0 },
+            { q: "What is a computer network?", options: ["A group of connected computers and devices", "A single keyboard", "A type of printer paper", "A computer game"], ans: 0 },
+            { q: "Which network usually covers a small area, such as a computer lab?", options: ["LAN", "WAN", "Global Network", "Satellite Network only"], ans: 0 },
+            { q: "Which network can connect computers across different countries?", options: ["PAN", "LAN", "WAN", "Single-User System"], ans: 2 },
+            { q: "What is the main purpose of a router?", options: ["To direct data between networks", "To type text", "To store files permanently", "To display videos"], ans: 0 },
+            { q: "Which device connects devices within a LAN and forwards data to the intended device?", options: ["Switch", "Scanner", "Microphone", "Projector"], ans: 0 },
+            { q: "Which device regenerates a weak network signal?", options: ["Repeater", "Keyboard", "Printer", "Webcam"], ans: 0 },
+            { q: "What is the main function of a modem?", options: ["To convert signals for communication", "To display images", "To cool the CPU", "To type numbers"], ans: 0 },
+            { q: "What is data communication?", options: ["Exchange of data between devices", "Deleting all files", "Printing a page", "Installing a game"], ans: 0 },
+            { q: "Which of the following is needed for data communication?", options: ["Sender, receiver, message, medium and protocol", "Only a printer", "Only a monitor", "Only a power cable"], ans: 0 },
+            { q: "A student sends a file from one computer to another. What is the path through which the data travels called?", options: ["Transmission Medium", "Operating System", "Application", "Folder"], ans: 0 },
+            { q: "A school connects its computers using fibre-optic cables. Which type of transmission medium is being used?", options: ["Wired Medium", "Wireless Medium", "Radio Waves", "Infrared Only"], ans: 0 },
+            { q: "A student transfers a file to a laptop using Bluetooth. Which type of communication is used?", options: ["Wireless Communication", "Wired Communication", "Fibre-Optic Communication", "Printed Communication"], ans: 0 },
+            { q: "Two computers need common rules to exchange data correctly. What are these rules called?", options: ["Protocols", "Pixels", "Folders", "Processors"], ans: 0 },
+            { q: "A student opens a website using a web browser. Which protocol is commonly used to access websites?", options: ["HTTP/HTTPS", "JPEG", "MP3", "ASCII only"], ans: 0 },
+            { q: "A network can transfer data at 100 Mbps. What does Mbps measure?", options: ["Data Transmission Rate", "Computer Weight", "Screen Size", "Number of Keyboard Keys"], ans: 0 },
+            { q: "A technician arranges computers in a particular pattern in a lab. What is this arrangement called?", options: ["Network Topology", "Data Storage", "Operating System", "Computer Architecture"], ans: 0 },
+            { q: "In a computer lab, every computer is connected to a central switch. Which topology is being used?", options: ["Bus", "Ring", "Star", "Linear"], ans: 2 },
+            { q: "A school wants to connect computers using one main cable to reduce cable costs. Which topology may be suitable?", options: ["Bus", "Star", "Full Mesh", "Point-to-Point for Every Pair"], ans: 0 },
+            { q: "Computers are connected in a circular path. Which topology is this?", options: ["Ring", "Star", "Bus", "Tree"], ans: 0 },
+            { q: "A school uses a central switch to connect all computers. One computer stops working, but the other computers continue working. Which topology is most likely being used?", options: ["Star", "Ring with a Single Shared Path", "A Network without Connections", "Bus with a Broken Main Cable"], ans: 0 },
+            { q: "A small office wants to connect several computers to a central switch. Which device should be used as the central connecting device?", options: ["Switch", "Scanner", "Printer", "Speaker"], ans: 0 },
+            { q: "A company needs to connect its offices in Karachi, Lahore and Islamabad. Which type of network is most suitable?", options: ["WAN", "PAN", "Single-Computer System", "Offline LAN Only"], ans: 0 },
+            { q: "A network signal becomes weak over a long cable. Which device can regenerate the signal?", options: ["Repeater", "Keyboard", "Webcam", "Plotter"], ans: 0 },
+            { q: "A home internet connection uses a device to convert signals for communication with the service provider. Which device is it?", options: ["Modem", "Monitor", "Scanner", "Joystick"], ans: 0 },
+            { q: "A student claims that the CPU stores all files permanently, even when the computer is switched off. Which statement is correct?", options: ["The CPU is permanent storage", "SSDs and hard drives provide permanent storage", "The CPU stores only photographs", "Computers cannot store files"], ans: 1 },
+            { q: "A computer is running several programs and needs to hold their active data temporarily. Which component helps most directly?", options: ["RAM", "Printer", "Router", "Speaker"], ans: 0 },
+            { q: "A user clicks a mouse, and the result appears on the monitor. Which sequence represents the basic information-processing cycle?", options: ["Input → Processing → Output", "Output → Input → Storage only", "Processing → Power Off → Input", "Storage → Output → Keyboard Removed"], ans: 0 },
+            { q: "A technician wants to reduce cable costs and accepts that a single cable failure may affect the whole network. Which topology fits this requirement?", options: ["Bus Topology", "Ring Topology", "Star Topology", "Bus and Ring Topologies Both"], ans: 0 },
+            { q: "Why is a central-device-based topology preferred in a school computer lab?", options: ["It always uses less cable", "It does not require any device", "It is always the cheapest", "Failure of one computer does not affect the others"], ans: 3 },
+            { q: "A technician connects each computer individually to a central device. Which topology is being used?", options: ["Star", "Bus", "Ring", "Mesh"], ans: 0 },
+            { q: "In a star topology, what may happen if the central switch fails?", options: ["The whole network may stop working", "Only the keyboard stops working", "All computers become faster", "The network changes into a bus topology automatically"], ans: 0 },
+            { q: "Which of the following is an example of a wired transmission medium?", options: ["Fibre-Optic Cable", "Radio Waves", "Bluetooth", "Infrared Signals"], ans: 0 },
+            { q: "Which of the following is an example of wireless communication?", options: ["Ethernet Cable", "USB Cable", "Wi-Fi", "Fibre-Optic Cable"], ans: 2 },
+            { q: "What does a network protocol define?", options: ["Rules for data communication", "The colour of a computer", "The size of a monitor", "The weight of a keyboard"], ans: 0 },
+            { q: "Which of the following is a networking device?", options: ["Router", "Keyboard", "Monitor", "Printer Paper"], ans: 0 },
+            { q: "Which type of network is generally suitable for connecting computers within one school building?", options: ["LAN", "WAN", "Global Network only", "Satellite Network only"], ans: 0 },
+            { q: "Which component performs calculations and logical comparisons inside the CPU?", options: ["ALU", "RAM", "ROM", "Hard Disk"], ans: 0 },
+            { q: "Which component coordinates and controls the execution of computer instructions?", options: ["Control Unit", "Printer", "Monitor", "SSD"], ans: 0 },
+            { q: "Which statement about computer memory is correct?", options: ["RAM normally loses its data when power is switched off", "RAM stores all data permanently", "ROM is used only to print documents", "A monitor stores all program instructions"], ans: 0 }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let timer = null;
+        let timeLeft = 60;
+        let studentDetails = {};
+
+        window.onload = function() {
+            checkAttemptStatus();
+        };
+
+        function checkAttemptStatus() {
+            const isSubmitted = localStorage.getItem('apsc_test_submitted');
+            if (isSubmitted === 'true') {
+                document.getElementById('registrationScreen').classList.add('hidden');
+                document.getElementById('quizScreen').classList.add('hidden');
+                document.getElementById('lockedScreen').classList.remove('hidden');
+                
+                const sName = localStorage.getItem('apsc_stu_name');
+                const sRoll = localStorage.getItem('apsc_stu_roll');
+                const sClass = localStorage.getItem('apsc_stu_class');
+                const sSec = localStorage.getItem('apsc_stu_section');
+                const sMarks = localStorage.getItem('apsc_stu_marks');
+                const sPerc = localStorage.getItem('apsc_stu_perc');
+
+                document.getElementById('previousResultSummary').innerHTML = `
+                    <p class="font-bold text-slate-800 border-b pb-1 mb-2">Previous Submitted Details:</p>
+                    <p class="text-slate-600">Name: <strong class="text-slate-900">${sName}</strong> | Roll #: <strong class="text-slate-900">${sRoll}</strong></p>
+                    <p class="text-slate-600">Class: <strong class="text-slate-900">${sClass} (${sSec})</strong></p>
+                    <p class="text-slate-600 mt-2">Score: <strong class="text-aps-darkgreen">${sMarks} (${sPerc})</strong></p>
+                `;
+            }
+        }
+
+        function startTest() {
+            const nameInput = document.getElementById('stuName').value.trim();
+            const rollInput = document.getElementById('stuRoll').value.trim();
+            const secInput = document.getElementById('stuSection').value;
+
+            if (!nameInput || !rollInput || !secInput) {
+                alert("Baraye meharbani apna Name, Roll Number, aur Section lazmi select/enter karein!");
+                return;
+            }
+
+            studentDetails = {
+                name: nameInput,
+                roll: rollInput,
+                class: document.getElementById('stuClass').value,
+                section: secInput
+            };
+
+            document.getElementById('registrationScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            clearInterval(timer);
+            timeLeft = 60;
+            document.getElementById('timerDisplay').innerText = timeLeft + 's';
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timerDisplay').innerText = timeLeft + 's';
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleAnswer(-1); // Timeout = Incorrect
+                }
+            }, 1000);
+
+            const qObj = quizData[currentIdx];
+            document.getElementById('questionCounter').innerText = `Question ${currentIdx + 1} of ${quizData.length}`;
+            document.getElementById('questionText').innerText = `${currentIdx + 1}. ${qObj.q}`;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            qObj.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.type = "button";
+                btn.className = "w-full text-left p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-emerald-600 hover:bg-emerald-50 transition flex items-center space-x-3 text-slate-800 text-xs sm:text-sm font-semibold active:scale-[0.99] cursor-pointer";
+                btn.innerHTML = `<span class="w-6 h-6 rounded-full bg-white border border-slate-300 flex items-center justify-center text-xs text-aps-darkgreen font-bold shrink-0">${String.fromCharCode(65 + idx)}</span> <span>${opt}</span>`;
+                btn.onclick = () => handleAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selectedIndex) {
+            clearInterval(timer);
+            const qObj = quizData[currentIdx];
+            
+            if (selectedIndex === qObj.ans) {
+                score += 0.5; // Correct answer = 0.5 Marks (No Negative Marking)
+            }
+
+            currentIdx++;
+            if (currentIdx < quizData.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            const totalPossibleMarks = quizData.length * 0.5; // 30 Marks
+            const percentage = Math.round((score / totalPossibleMarks) * 100);
+
+            let remarks = "";
+            if (percentage >= 80) remarks = "Outstanding Performance! Excellent work.";
+            else if (percentage >= 65) remarks = "Good Job! Keep working hard.";
+            else if (percentage >= 50) remarks = "Fair Attempt. Revision required.";
+            else remarks = "Needs Improvement. Review Domain A concepts.";
+
+            // Render Result Card
+            document.getElementById('resStuName').innerText = studentDetails.name;
+            document.getElementById('resStuRoll').innerText = studentDetails.roll;
+            document.getElementById('resStuClass').innerText = studentDetails.class;
+            document.getElementById('resStuSection').innerText = `Section ${studentDetails.section}`;
+
+            document.getElementById('resMarks').innerText = `${score} / ${totalPossibleMarks}`;
+            document.getElementById('resPercentage').innerText = `${percentage}%`;
+            document.getElementById('resRemarks').innerText = remarks;
+
+            // Lock attempt state in localStorage
+            localStorage.setItem('apsc_test_submitted', 'true');
+            localStorage.setItem('apsc_stu_name', studentDetails.name);
+            localStorage.setItem('apsc_stu_roll', studentDetails.roll);
+            localStorage.setItem('apsc_stu_class', studentDetails.class);
+            localStorage.setItem('apsc_stu_section', studentDetails.section);
+            localStorage.setItem('apsc_stu_marks', `${score} / ${totalPossibleMarks}`);
+            localStorage.setItem('apsc_stu_perc', `${percentage}%`);
+        }
+
+        // Admin Panel Controls
+        function openAdminModal() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            document.getElementById('adminModal').classList.add('flex');
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminLoginView').classList.remove('hidden');
+            document.getElementById('adminDashboardView').classList.add('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+            document.getElementById('adminModal').classList.remove('flex');
+        }
+
+        function verifyAdmin() {
+            const pwd = document.getElementById('adminPasswordInput').value;
+            if (pwd === "FBISEMCQsOnlineTest") {
+                document.getElementById('adminLoginView').classList.add('hidden');
+                document.getElementById('adminDashboardView').classList.remove('hidden');
+            } else {
+                alert("Incorrect Admin Password!");
+            }
+        }
+
+        function adminResetTest() {
+            localStorage.removeItem('apsc_test_submitted');
+            localStorage.removeItem('apsc_stu_name');
+            localStorage.removeItem('apsc_stu_roll');
+            localStorage.removeItem('apsc_stu_class');
+            localStorage.removeItem('apsc_stu_section');
+            localStorage.removeItem('apsc_stu_marks');
+            localStorage.removeItem('apsc_stu_perc');
+            alert("Student test attempt lock reset successfully!");
+            location.reload();
+        }
+    </script>
+</body>
+</html>
